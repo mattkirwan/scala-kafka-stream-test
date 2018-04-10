@@ -2,7 +2,7 @@ import java.util.Properties
 import java.util.concurrent.TimeUnit
 
 import org.apache.kafka.common.serialization.Serdes
-import org.apache.kafka.streams.kstream.{KStream, KStreamBuilder, Printed}
+import org.apache.kafka.streams.kstream.{KStream, Printed}
 import org.apache.kafka.streams.{KafkaStreams, StreamsBuilder, StreamsConfig}
 
 object Main extends App {
@@ -29,4 +29,5 @@ object Main extends App {
   Runtime.getRuntime.addShutdownHook(new Thread(() => {
     streams.close(10, TimeUnit.SECONDS)
   }))
+
 }

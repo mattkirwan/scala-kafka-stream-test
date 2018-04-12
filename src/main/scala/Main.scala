@@ -2,7 +2,6 @@ import java.util.Properties
 import java.util.concurrent.TimeUnit
 
 import org.apache.kafka.common.serialization.Serdes
-import org.apache.kafka.streams.kstream.{KStream, Printed}
 import org.apache.kafka.streams._
 
 object Main extends App {
@@ -18,17 +17,13 @@ object Main extends App {
 
   val builder = new StreamsBuilder
 
-  val topology: Topology = builder.build()
+  builder.stream[String, String]("testing")
+    .mapValues(v => v.toUpperCase)
+    .to("testing-out")
 
-  val sourceStream: KStream[String, String] = builder.stream("testing")
 
-  val uppercaseStream: KStream[String, String] = sourceStream.mapValues { v => v.toUpperCase }
-
-  uppercaseStream.print(Printed.toSysOut[String, String]())
-
-  uppercaseStream.to("testing-out")
-
-  println(topology.describe())
+//  val topology: Topology = builder.build()
+//  println(topology.describe())
 
   val kafkaStreams = new KafkaStreams(builder.build(), config)
 

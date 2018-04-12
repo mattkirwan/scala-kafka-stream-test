@@ -3,11 +3,11 @@ import java.util.concurrent.TimeUnit
 
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.kstream.{KStream, Printed}
-import org.apache.kafka.streams.{KafkaStreams, StreamsBuilder, StreamsConfig}
+import org.apache.kafka.streams._
 
 object Main extends App {
 
-  val streamConfig: Properties = {
+  val config: Properties = {
     val props = new Properties
     props.put(StreamsConfig.APPLICATION_ID_CONFIG, "appid")
     props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:19092,localhost:29092,localhost:39092")
@@ -18,16 +18,24 @@ object Main extends App {
 
   val builder = new StreamsBuilder
 
-  val source: KStream[String, String] = builder.stream("testing")
+  val topology: Topology = builder.build()
 
-  source.print(Printed.toSysOut[String, String]())
+  val sourceStream: KStream[String, String] = builder.stream("testing")
 
-  val streams = new KafkaStreams(builder.build(), streamConfig)
+  val uppercaseStream: KStream[String, String] = sourceStream.mapValues { v => v.toUpperCase }
 
-  streams.start()
+  uppercaseStream.print(Printed.toSysOut[String, String]())
+
+  uppercaseStream.to("testing-out")
+
+  println(topology.describe())
+
+  val kafkaStreams = new KafkaStreams(builder.build(), config)
+
+  kafkaStreams.start()
 
   Runtime.getRuntime.addShutdownHook(new Thread(() => {
-    streams.close(10, TimeUnit.SECONDS)
+    kafkaStreams.close(10, TimeUnit.SECONDS)
   }))
 
 }

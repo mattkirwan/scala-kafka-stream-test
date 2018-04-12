@@ -33,3 +33,7 @@ and the KStreams app will print:
 [KSTREAM-SOURCE-0000000000]: hello, world
 ```
 
+and also output so topic `testing-out`:
+
+`kafka-console-consumer --bootstrap-server localhost:19092,localhost:29092,localhost:39092 --topic testing-out --from-beginning`
+

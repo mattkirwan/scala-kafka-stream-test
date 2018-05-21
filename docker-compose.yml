@@ -118,3 +118,13 @@ services:
     working_dir: /app-scala
     entrypoint: "tail -f /etc/hosts"
 
+  yelling-app:
+    image: hseeberger/scala-sbt
+    network_mode: host
+    depends_on:
+      - schema-registry
+    volumes:
+      - ./:/yelling
+    working_dir: /yelling
+    entrypoint: "tail -f /etc/hosts"
+

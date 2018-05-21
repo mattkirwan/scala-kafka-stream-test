@@ -1,0 +1,7 @@
+{"namespace": "com.mattkirwan.avro",
+ "type": "record",
+ "name": "Board",
+ "fields": [
+     {"name": "cell", "type": "string"}
+ ]
+}
